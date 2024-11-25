@@ -29,6 +29,20 @@ describe 'Request' do
             headers = {'Host' => 'developer.mozilla.org', 'Accept-Language' => 'fr'}
             _(request.headers ).must_equal headers
         end
+
+        it 'parses the params1' do 
+            request_string = File.read('./test/example_requests/get-fruits-with-filter.request.txt')
+            request = Request.new(request_string)
+            params = {'type' => 'bananas', 'minrating' => '4'}
+            _(request.params).must_equal params
+        end
+
+        it 'parses the params2' do
+            request_string = File.read('./test/example_requests/post-login.request.txt')
+            request = Request.new(request_string)
+            params = {'username' => 'grillkorv', 'password' => 'verys3cret!'}
+            _(request.params).must_equal params
+        end
     end
 
 
