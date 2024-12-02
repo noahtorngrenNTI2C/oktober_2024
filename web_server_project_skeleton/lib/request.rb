@@ -4,20 +4,20 @@
 
 
     def initialize(request_string)
-      @request_string_double_split = request_string.split("\n\n")
-      @request_string_split = request_string.split("\n")
-      @first_line = @request_string_split[0]
-      @method = @first_line.split(" ")[0].downcase.to_sym
+      request_string_double_split = request_string.split("\n\n")
+      request_string_split = request_string.split("\n")
+      first_line = request_string_split[0]
+      @method = first_line.split(" ")[0].downcase.to_sym
       
-      @resource = @first_line.split(" ")[1]
-      @version = @first_line.split(" ")[2]
-      @headers = headers_setup()
-      @params = params_setup
+      @resource = first_line.split(" ")[1]
+      @version = first_line.split(" ")[2]
+      @headers = headers_setup(request_string_split)
+      @params = params_setup(request_string_double_split)
       
     end
   
-    def headers_setup()
-      temp = @request_string_split.dup
+    def headers_setup(request_string_split)
+      temp = request_string_split.dup
       temp.delete_at(0)
       headers = {}
 
@@ -38,7 +38,7 @@
       headers
     end
 
-    def params_setup
+    def params_setup(request_string_double_split)
       resource = self.resource
       first_params = @request_string_double_split[1]
       params = {}
