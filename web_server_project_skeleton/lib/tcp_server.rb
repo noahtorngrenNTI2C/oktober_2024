@@ -1,5 +1,6 @@
 require 'socket'
 require_relative 'request'
+require_relative 'router'
 
 class HTTPServer
 
@@ -24,9 +25,9 @@ class HTTPServer
             puts "-" * 40 
 
             #
-            request = Request.new(data)
-          
-            
+            request = Request.new(data)            
+
+
             result = router.match_route(request)
             if result
               status = 200

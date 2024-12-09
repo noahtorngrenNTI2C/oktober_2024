@@ -40,7 +40,7 @@
 
     def params_setup(request_string_double_split)
       resource = self.resource
-      first_params = @request_string_double_split[1]
+      first_params = request_string_double_split[1]
       params = {}
 
       if resource.include?('?') 
