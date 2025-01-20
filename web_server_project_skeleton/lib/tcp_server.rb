@@ -12,7 +12,9 @@ class HTTPServer
         server = TCPServer.new(@port)
         puts "Listening on #{@port}"
         router = Router.new
-        router.add_route(:get, "/gubbe")
+        router.add_route(:get, "/gubbe/") do # method ska vara en symbol
+            "<h1> Weee </h1>"
+        end
 
         while session = server.accept
             data = ""
@@ -29,24 +31,29 @@ class HTTPServer
 
 
             result = router.match_route(request)
-            if result
-              status = 200
-              html = "<h1>gubbe!</h1>"
-            else
-              status = 404
-              html = "<h1>:(</h1>"
-            end
-            #Sen kolla om resursen (filen finns)
 
 
-            # Nedanstående bör göras i er Response-klass
-            #html = "<h1>Hello, World!</h1>"
+            response = Response.new(result, session)
+            response.send
 
-            session.print "HTTP/1.1 #{status}\r\n"
-            session.print "Content-Type: text/html\r\n"
-            session.print "\r\n"
-            session.print html
-            session.close
+            # if result
+            #   status = 200
+            #   html = result[:block].call #<h1>gubbe!</h1>"
+            # else
+            #   status = 404
+            #   html = "<h1>:(</h1>"
+            # end
+            # #Sen kolla om resursen (filen finns)
+
+
+            # # Nedanstående bör göras i er Response-klass
+            # #html = "<h1>Hello, World!</h1>"
+
+            # session.print "HTTP/1.1 #{status}\r\n"
+            # session.print "Content-Type: text/html\r\n"
+            # session.print "\r\n"
+            # session.print html
+            # session.close
         end
     end
 end
