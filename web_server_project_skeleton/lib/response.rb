@@ -21,8 +21,27 @@
 
 class Response 
   
-  def initialize()
+  def initialize(result, session)
+    @result = result
+    @session = session
 
+  end
+
+  def send
+    if @result 
+      
+      status = 200
+      html = @result[:block].call 
+    else
+      status = 404
+      html = "<h1>:(</h1>"
+    end
+
+    @session.print "HTTP/1.1 #{status}\r\n"
+    @session.print "Content-Type: text/html\r\n"
+    @session.print "\r\n"
+    @session.print html
+    @session.close
   end
 
 end

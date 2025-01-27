@@ -4,6 +4,14 @@
 
 
     def initialize(request_string)
+      if request_string.empty?  
+        @resource = ""
+        @version = ""
+        @headers = ""
+        @params = ""
+        return
+      end
+
       request_string_double_split = request_string.split("\n\n")
       request_string_split = request_string.split("\n")
       first_line = request_string_split[0]
