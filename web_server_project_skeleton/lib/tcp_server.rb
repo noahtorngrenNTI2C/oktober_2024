@@ -5,17 +5,19 @@ require_relative 'response'
 
 class HTTPServer
 
-    def initialize(port)
+    def initialize(port, router)
         @port = port
+        @router = router
     end
 
-    def start
+    def start()
         server = TCPServer.new(@port)
         puts "Listening on #{@port}"
-        router = Router.new
-        router.add_route(:get, "/gubbe/") do # method ska vara en symbol
-            "<h1> Weee </h1>"
-        end
+        
+        #router = Router.new
+        #router.add_route(:get, "/gubbe/") do # method ska vara en symbol
+        #    "<h1> Weee </h1>"
+        #end
 
         while session = server.accept
             data = ""
@@ -27,11 +29,13 @@ class HTTPServer
             puts data
             puts "-" * 40 
 
-            #
+            next if data == ""
+
+
             request = Request.new(data)            
 
 
-            result = router.match_route(request)
+            result = @router.match_route(request)
 
 
             response = Response.new(result, session)
@@ -41,5 +45,3 @@ class HTTPServer
     end
 end
 
-server = HTTPServer.new(4567)
-server.start
