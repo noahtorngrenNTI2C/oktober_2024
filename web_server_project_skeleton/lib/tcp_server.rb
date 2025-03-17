@@ -37,6 +37,22 @@ class HTTPServer
 
             result = @router.match_route(request)
 
+            p result
+
+            # if no result
+            # check in file system (public folder)
+            # generate new response for file
+            # läs filen som binär data (IO.read("binfile", mode: "rb"))
+            # set mime type
+
+            if result == nil
+                if File.file("./public" + request.resource)
+                    @router.add_route(request.method, request.resource) do
+                        IO.read("./public" + request.resource, mode: "rb")
+                    end
+                    result = @router.match_route(request)
+                end
+            end
 
             response = Response.new(result, session)
             response.send

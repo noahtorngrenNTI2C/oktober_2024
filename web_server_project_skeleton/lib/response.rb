@@ -38,7 +38,11 @@ class Response
     end
 
     @session.print "HTTP/1.1 #{status}\r\n"
+    #content-type jpg html
+    puts html
     @session.print "Content-Type: text/html\r\n"
+    # content-length (bytes)
+    @session.print "Content-Length: #{html.bytesize}\r\n"
     @session.print "\r\n"
     @session.print html
     @session.close

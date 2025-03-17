@@ -1,9 +1,22 @@
+require_relative 'tcp_server'
+require_relative 'router'
+
+@router = Router.new
+@server = HTTPServer.new(4567, @router)
 
 
-def get()
-
+def get(resource, &block)
+    method = :get
+    resource = resource
+    block = block 
+    @router.add_route(method,resource,&block)
 end
 
-def post()
+def post(resource, &block)
+    method = :post
+    resource = resource
+    block = block
 
+    @router.add_route(method,resource,&block)
 end
+

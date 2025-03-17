@@ -1,11 +1,21 @@
-require_relative "lib/router"
-require_relative "lib/tcp_server"
-require 'slim'
+puts "start"
 
-router = Router.new
+require_relative 'lib/main'
+
 #router.add_route(:get, "/gubbe/") do # method ska vara en symbol
 #  Slim::Template.new.("views/index.slim").render({username: "Olle"}) 
 #end
 
-server = HTTPServer.new(4567, router)
-server.start
+
+#puts router
+get("/test") do
+  p "get test"
+  File.read("html/index.html") #("ruby .\test.rhtml")
+end
+
+get("/hej") do
+  File.read("html/hej.html")
+end
+
+
+@server.start
