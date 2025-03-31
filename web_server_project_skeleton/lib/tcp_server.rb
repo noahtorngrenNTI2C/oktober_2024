@@ -44,16 +44,42 @@ class HTTPServer
             # generate new response for file
             # läs filen som binär data (IO.read("binfile", mode: "rb"))
             # set mime type
-            if !result
-                if File.file?("./public" + request.resource)
-                    @router.add_route(request.method, request.resource) do
-                        IO.read("./public" + request.resource, mode: "rb")
+
+
+            if result
+                response = Response.new(result, session)
+            else result
+                filepath = "./public" + request.resource
+                if File.file?(filepath)
+                    #@router.add_route(request.method, request.resource) do
+                    #kolla i filepath vad det är för filtyp
+                    filetype = File.extname(filepath).downcase
+                    #jämför med mime types
+                    content_type = case filetype
+                    when ".html" then "text/html"
+                    when ".css" then "text/css"
+                    when ".js" then "application/javascript"    
+                    when ".jpg", ".jpeg" then "image/jpeg"
+                    when ".png" then "image/png"
+                    when ".gif" then "image/gif"
+                    when ".svg" then "image/svg+xml"
+                    when ".ico" then "image/x-icon"
+                    when ".txt" then "text/plain"
+                    when ".pdf" then "application/pdf"
+                    when ".zip" then "application/zip"
+                    when ".mp4" then "video/mp4"
+                    when ".mp3" then "audio/mpeg"
                     end
-                    result = @router.match_route(request)
+                    
+                    #sätt content_type
+                    result = IO.read(filepath, mode: "rb")
+                    response = Response.new(result, session, content_type)
+
+                    #end
+                    #result = @router.match_route(request)
                 end
             end
 
-            response = Response.new(result, session)
             response.send
 
         end

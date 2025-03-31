@@ -6,11 +6,17 @@ require_relative 'router'
 
 
 def get(resource, &block)
+    
+    
     method = :get
     resource = resource
     block = block 
     @router.add_route(method,resource,&block)
 end
+
+# nästa steg dynamiska routes 
+
+
 
 def post(resource, &block)
     method = :post
