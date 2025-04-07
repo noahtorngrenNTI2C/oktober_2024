@@ -33,7 +33,7 @@ class Response
     if @result    
       status = 200
       if @result.class == Hash #block eller string 
-        html = @result[:block].call
+        html = @result[:block].call#()
       else
         html = @result 
       end

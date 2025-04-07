@@ -19,10 +19,18 @@ get("/hej") do
   File.read("html/hej.html")
 end
 
+#/add/1/2
+#/add/4/5
 get("/add/:num1/:num2") do |params|
   "<h1>#{params[0].to_i + params[1].to_i}</h1>"
 end
 
+#/users/3/pages/5
+# -----   -----
+
+get("/users/:user_id/pages/:page_id") do |params|
+  "<h1>#{params[0].to_i + params[1].to_i}</h1>"
+end
 
 
 @server.start
