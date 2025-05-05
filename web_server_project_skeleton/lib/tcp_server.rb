@@ -36,52 +36,56 @@ class HTTPServer
 
 
             result = @router.match_route(request)
-
-            
-
+    
             # if no result
             # check in file system (public folder)
             # generate new response for file
             # läs filen som binär data (IO.read("binfile", mode: "rb"))
             # set mime type
 
-
             if result
-                response = Response.new(result, session)
-            else result
+                puts "THERE IS A RESULT"
+                response = Response.new(result,200, session)
+            else
+                puts "NO RESULT" 
                 filepath = "./public" + request.resource
                 if File.file?(filepath)
-                    #@router.add_route(request.method, request.resource) do
-                    #kolla i filepath vad det är för filtyp
-                    filetype = File.extname(filepath).downcase
-                    #jämför med mime types
-                    content_type = case filetype
-                    when ".html" then "text/html"
-                    when ".css" then "text/css"
-                    when ".js" then "application/javascript"    
-                    when ".jpg", ".jpeg" then "image/jpeg"
-                    when ".png" then "image/png"
-                    when ".gif" then "image/gif"
-                    when ".svg" then "image/svg+xml"
-                    when ".ico" then "image/x-icon"
-                    when ".txt" then "text/plain"
-                    when ".pdf" then "application/pdf"
-                    when ".zip" then "application/zip"
-                    when ".mp4" then "video/mp4"
-                    when ".mp3" then "audio/mpeg"
-                    end
+                     #@router.add_route(request.method, request.resource) do
+                     #kolla i filepath vad det är för filtyp
+                     filetype = File.extname(filepath).downcase
+                     #jämför med mime types
+                     content_type = case filetype
+                     when ".html" then "text/html"
+                     when ".css" then "text/css"
+                     when ".js" then "application/javascript"    
+                     when ".jpg", ".jpeg" then "image/jpeg"
+                     when ".png" then "image/png"
+                     when ".gif" then "image/gif"
+                     when ".svg" then "image/svg+xml"
+                     when ".ico" then "image/x-icon"
+                     when ".txt" then "text/plain"
+                     when ".pdf" then "application/pdf"
+                     when ".zip" then "application/zip"
+                     when ".mp4" then "video/mp4"
+                     when ".mp3" then "audio/mpeg"
+                     end
                     
-                    #sätt content_type
-                    result = IO.read(filepath, mode: "rb")
-                    response = Response.new(result, session, content_type)
-
-                    #end
-                    #result = @router.match_route(request)
-                end
-            end
-
+                     #sätt content_type
+                     result = IO.read(filepath, mode: "rb")
+                     response = Response.new(result, 200, session, content_type)
+                else
+                     response = Response.new(File.read("html/404.html"), 404, session, "text/html")
+                     #end
+                     #result = @router.match_route(request)
+                 end
+             end
             response.send
-
+            #html = response.html
+            #session.print "HTTP/1.1 200\r\n"
+            #session.print "Content-Type: text/html\r\n"
+            #session.print "\r\n"
+            #session.print html
+            #session.close
         end
     end
 end

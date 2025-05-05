@@ -23,35 +23,37 @@ using Rainbow
 
 class Response 
   
-  def initialize(result, session, content_type="text/html")
+  attr_reader :html
+
+  def initialize(result, status, session, content_type="text/html")
+    p "NEW RESPONSE #{self.inspect}"
+    p session
     @result = result
+    @status = status
     @session = session
+    @html = "<h1>Hello Response</h1>"
     @content_type = content_type
   end
 
   def send
-    if @result    
-      status = 200
-      if @result.class == Hash #block eller string 
-        html = @result[:block].call#()
+    if @result.class == Hash #block eller string 
+      if !@result[:params] 
+        html = @result[:block].call
       else
-        html = @result 
+        html = @result[:block].call(@result[:params]) 
       end
-       
     else
-      status = 404
-      html = "<h1>:(</h1>"
+      html = @result
     end
 
-    @session.print "HTTP/1.1 #{status}\r\n"
+    @session.print "HTTP/1.1 #{@status}\r\n"
     @session.print "Content-Type: #{@content_type}\r\n"
     @session.print "Content-Length: #{html.bytesize}\r\n"
     @session.print "\r\n"
     @session.print html
     @session.close
-
     puts "#{@content_type}".blue
-    puts "#{status}".red
+    puts "#{@status}".red
 
     puts "#{html.bytesize}".green
   end

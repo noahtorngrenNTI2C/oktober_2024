@@ -8,42 +8,36 @@ class Router
   end
 
   def match_route(request)
-    #hITTA SAKEN I @ROUTES SOM MATCHAR
     @routes.each do |route|
       if route[:method] == request.method 
-        # är det en dynamisk route?
         if route[:resource].include?(":")
-          # dela upp den 
           route_split = route[:resource].split("/")
-          dynamic = []
           request_split = request.resource.split("/")
-
-          # är det lika många
-          if request_split.length == route_split.length
-
-          end
-
-          route_split.each do |params|
-            if params.include?(":")
-              dynamic << params
+  
+          # Kolla att längden är samma
+          if route_split.length == request_split.length
+            dynamic_value = []
+            match = true
+  
+            route_split.each_with_index do |part, index|
+              if part.start_with?(":")
+                dynamic_value << request_split[index]
+              elsif part != request_split[index]
+                match = false
+                break
+              end
+            end
+  
+            if match
+              route[:params] = dynamic_value
+              return route
             end
           end
-          
-
-          request.
-          
         else
           if route[:resource] == request.resource
             return route
           end
         end
-
-        # matchar den dynamiska routen requesten?
-          require 'debug'
-          binding.break
-          # vilka params finns?
-          # lägg till params i route
-        return route
       end
     end
     return false
