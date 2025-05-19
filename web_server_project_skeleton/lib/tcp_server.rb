@@ -45,12 +45,14 @@ class HTTPServer
 
             if result
                 puts "THERE IS A RESULT"
-                response = Response.new(result,200, session)
+                response = OKResponse.new(result, session)
             else
                 puts "NO RESULT" 
                 filepath = "./public" + request.resource
                 if File.file?(filepath)
                      #@router.add_route(request.method, request.resource) do
+                     
+                     #TODO: Egen klass
                      #kolla i filepath vad det är för filtyp
                      filetype = File.extname(filepath).downcase
                      #jämför med mime types
@@ -72,9 +74,14 @@ class HTTPServer
                     
                      #sätt content_type
                      result = IO.read(filepath, mode: "rb")
+                     
+                     #TODO: Egen okResponse klass
+                     #response = OKResponse.new(result, session, content_type)
                      response = Response.new(result, 200, session, content_type)
                 else
-                     response = Response.new(File.read("html/404.html"), 404, session, "text/html")
+                    #TODO: Egen not found klass
+                     #NotFoundResponse.new(session)
+                    response = Response.new(File.read("html/404.html"), 404, session, "text/html")
                      #end
                      #result = @router.match_route(request)
                  end

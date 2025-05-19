@@ -32,5 +32,12 @@ get("/users/:user_id/pages/:page_id") do |params|
   "<h1>#{params[0].to_i + params[1].to_i}</h1>"
 end
 
+get("/brev") do
+  File.read("html/brev.html")
+end
+
+post("/skicka") do |params|
+  "senap"
+end
 
 @server.start
