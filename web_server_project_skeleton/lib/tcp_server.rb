@@ -2,6 +2,9 @@ require 'socket'
 require_relative 'request'
 require_relative 'router'
 require_relative 'response'
+require_relative 'mime'
+require_relative 'not_found_response'
+require_relative 'ok_response'
 
 class HTTPServer
 
@@ -48,40 +51,20 @@ class HTTPServer
                 response = OKResponse.new(result, session)
             else
                 puts "NO RESULT" 
+                mime = Mime.new(request.resource)
                 filepath = "./public" + request.resource
                 if File.file?(filepath)
-                     #@router.add_route(request.method, request.resource) do
-                     
-                     #TODO: Egen klass
-                     #kolla i filepath vad det är för filtyp
-                     filetype = File.extname(filepath).downcase
                      #jämför med mime types
-                     content_type = case filetype
-                     when ".html" then "text/html"
-                     when ".css" then "text/css"
-                     when ".js" then "application/javascript"    
-                     when ".jpg", ".jpeg" then "image/jpeg"
-                     when ".png" then "image/png"
-                     when ".gif" then "image/gif"
-                     when ".svg" then "image/svg+xml"
-                     when ".ico" then "image/x-icon"
-                     when ".txt" then "text/plain"
-                     when ".pdf" then "application/pdf"
-                     when ".zip" then "application/zip"
-                     when ".mp4" then "video/mp4"
-                     when ".mp3" then "audio/mpeg"
-                     end
+                     content_type = mime.content_type
                     
                      #sätt content_type
                      result = IO.read(filepath, mode: "rb")
                      
-                     #TODO: Egen okResponse klass
-                     #response = OKResponse.new(result, session, content_type)
-                     response = Response.new(result, 200, session, content_type)
+                     response = OKResponse.new(result, session, content_type)
+                     #response = Response.new(result, 200, session, content_type)
                 else
-                    #TODO: Egen not found klass
-                     #NotFoundResponse.new(session)
-                    response = Response.new(File.read("html/404.html"), 404, session, "text/html")
+                    response = NotFoundResponse.new(session)
+                    #response = Response.new(File.read("html/404.html"), 404, session, "text/html")
                      #end
                      #result = @router.match_route(request)
                  end

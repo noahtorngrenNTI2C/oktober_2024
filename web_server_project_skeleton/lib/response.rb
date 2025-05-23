@@ -38,8 +38,6 @@ class Response
   def send
     if @result.class == Hash #block eller string 
       if !@result[:params] 
-        require 'debug'
-        binding.break
         html = @result[:block].call
       else
         html = @result[:block].call(@result[:params]) 
